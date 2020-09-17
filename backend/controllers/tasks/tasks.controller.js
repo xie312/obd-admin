@@ -6,6 +6,8 @@ const task = require('../../models/Task');
 // GET HTTP sorted and paginated data
 router.get('/', (req, res) => {
     task.getAllTasks(req.query, (err, tasks, totalTasks) => {
+        console.log('tasks : ', tasks);
+
         if (err) {
             res.status(501).json({
                 success: false,

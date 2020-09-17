@@ -34,18 +34,30 @@ module.exports.getAllTasks = (query, callback) => {
     const page = query.page;
     const limitTo = query.limitTo;
     try {
-        TaskList.paginate({}, {
-            sort: {
-                [sort]: order
-            },
-            page: page,
-            limit: +limitTo
-        }, function (err, result) {
+        // TaskList.paginate({}, {
+        //     sort: {
+        //         [sort]: order
+        //     },
+        //     page: page,
+        //     limit: +limitTo
+        // }, function (err, result) {
+        //     if (err) {
+        //         callback(err, null);
+        //     } else {
+        //         callback(null, result.docs, result.total);
+        //     }
+        // });
+
+
+        // Without pagination
+        TaskList.find(function (err, result) {
             if (err) {
                 callback(err, null);
+            } else {
+                callback(null, result, result.length);
             }
-            callback(null, result.docs, result.total);
         });
+
     } catch (err) {
         console.log('err', err);
     }
