@@ -15,7 +15,7 @@ import { routeAnimations } from '@appcore';
   animations: [routeAnimations]
 })
 export class HomeComponent implements OnInit {
-  title = 'MEAN Material App';
+  title = 'Connected Workshop';
   currentUser: User = this.localStorage.getItem('currentUser');
   routes: { path: string, label: string }[];
   @ViewChild('drawer') drawer: MatSidenav;

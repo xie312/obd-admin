@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const server = '127.0.0.1:27017'; // REPLACE WITH YOUR DB SERVER
-const database = 'mean-material-app-db';      // REPLACE WITH YOUR DB NAME
+const database = 'obd-admin-db';      // REPLACE WITH YOUR DB NAME
 const localConnectionString = `mongodb://${server}/${database}`;
 const remoteConnectionString = `mongodb+srv://new-user_31:${process.env.passphrase}@cluster0-pke4z.mongodb.net/test?retryWrites=true/mean-material-app-db`;
 class Database {
