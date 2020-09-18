@@ -22,7 +22,7 @@ export class DiagnosticListComponent implements OnInit {
   diagnosticData: Diagnostic;
 
   dataSource = new MatTableDataSource();
-  displayedColumns: string[] = ['id', 'name', 'age', 'address'];
+  displayedColumns: string[] = ['id', 'title', 'description', 'category'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true}) sort: MatSort;
 
