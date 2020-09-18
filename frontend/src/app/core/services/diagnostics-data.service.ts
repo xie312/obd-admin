@@ -1,7 +1,7 @@
 // http-data.servie.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { Student } from '../models/student';
+import { Diagnostic } from '../models/diagnostic';
 import { Observable, throwError } from 'rxjs';
 import { retry, catchError } from 'rxjs/operators';
 
@@ -12,7 +12,7 @@ export class DiagnosticsDataService {
 
 
   // API path
-  base_path = 'http://localhost:3000/students';
+  base_path = 'http://localhost:3000/diagnostics';
 
   constructor(private http: HttpClient) { }
 
@@ -42,9 +42,9 @@ export class DiagnosticsDataService {
 
 
   // Create a new item
-  createItem(item): Observable<Student> {
+  createItem(item): Observable<Diagnostic> {
     return this.http
-      .post<Student>(this.base_path, JSON.stringify(item), this.httpOptions)
+      .post<Diagnostic>(this.base_path, JSON.stringify(item), this.httpOptions)
       .pipe(
         retry(2),
         catchError(this.handleError)
@@ -52,9 +52,9 @@ export class DiagnosticsDataService {
   }
 
   // Get single student data by ID
-  getItem(id): Observable<Student> {
+  getItem(id): Observable<Diagnostic> {
     return this.http
-      .get<Student>(this.base_path + '/' + id)
+      .get<Diagnostic>(this.base_path + '/' + id)
       .pipe(
         retry(2),
         catchError(this.handleError)
@@ -62,9 +62,9 @@ export class DiagnosticsDataService {
   }
 
   // Get students data
-  getList(): Observable<Student> {
+  getList(): Observable<Diagnostic> {
     return this.http
-      .get<Student>(this.base_path)
+      .get<Diagnostic>(this.base_path)
       .pipe(
         retry(2),
         catchError(this.handleError)
@@ -72,9 +72,9 @@ export class DiagnosticsDataService {
   }
 
   // Update item by id
-  updateItem(id, item): Observable<Student> {
+  updateItem(id, item): Observable<Diagnostic> {
     return this.http
-      .put<Student>(this.base_path + '/' + id, JSON.stringify(item), this.httpOptions)
+      .put<Diagnostic>(this.base_path + '/' + id, JSON.stringify(item), this.httpOptions)
       .pipe(
         retry(2),
         catchError(this.handleError)
@@ -84,7 +84,7 @@ export class DiagnosticsDataService {
   // Delete item by id
   deleteItem(id) {
     return this.http
-      .delete<Student>(this.base_path + '/' + id, this.httpOptions)
+      .delete<Diagnostic>(this.base_path + '/' + id, this.httpOptions)
       .pipe(
         retry(2),
         catchError(this.handleError)

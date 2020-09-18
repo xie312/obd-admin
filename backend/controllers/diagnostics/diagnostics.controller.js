@@ -1,23 +1,21 @@
 //Require the express package and use express.Router()
 const express = require('express');
 const router = express.Router();
-const task = require('../../models/Task');
+const diagnostic = require('../../models/Diagnostic');
 
 // GET HTTP sorted and paginated data
 router.get('/', (req, res) => {
-    task.getAllTasks(req.query, (err, tasks, totalTasks) => {
-        console.log('tasks : ', tasks);
-
+    diagnostic.getAll(req.query, (err, items, length) => {
         if (err) {
             res.status(501).json({
                 success: false,
-                message: `Failed to load all tasks. Error: ${err}`
+                message: `Failed to load all items. Error: ${err}`
             });
         } else {
             res.status(200).write(JSON.stringify({
                 success: true,
-                tasks: tasks,
-                totalTasks: totalTasks
+                items: items,
+                length: length
             }, null, 2));
             res.end();
 
@@ -29,7 +27,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
     //access the parameter which is the id of the item to be deleted
     let id = req.params.id;
-    task.getTaskById(id, (err, tasks) => {
+    diagnostic.getById(id, (err, items) => {
         if (err) {
             res.status(501).json({
                 success: false,
@@ -38,7 +36,7 @@ router.get('/:id', (req, res) => {
         } else {
             res.status(200).write(JSON.stringify({
                 success: true,
-                tasks: tasks
+                items: items
             }, null, 2));
             res.end();
 
@@ -48,13 +46,13 @@ router.get('/:id', (req, res) => {
 
 //POST HTTP method to add task
 router.post('/', (req, res, next) => {
-    let newTask = new task({
+    let newItem = new diagnostic({
         title: req.body.title,
         description: req.body.description,
         category: req.body.category,
-        module: req.body.module
     });
-    task.addTask(newTask, (err, list) => {
+
+    diagnostic.add(newItem, (err, list) => {
         if (err) {
             res.status(501).json({
                 success: false,
@@ -75,7 +73,7 @@ router.delete('/:id', (req, res, next) => {
     //access the parameter which is the id of the item to be deleted
     let id = req.params.id;
     //Call the model method deleteListById
-    task.deleteTaskById(id, (err, list) => {
+    diagnostic.deleteById(id, (err, list) => {
         if (err) {
             res.status(501).json({
                 success: false,
@@ -98,7 +96,7 @@ router.delete('/:id', (req, res, next) => {
 //PUT HTTP method to update task. Here, we pass in id and updated task in body.
 router.put('/:id', (req, res, next) => {
     let id = req.params.id;
-    task.updateById(id, req.body.task, (err, updatedTask) => {
+    diagnostic.updateById(id, req.body.task, (err, updatedTask) => {
         if (err) {
             res.status(501).json({
                 success: false,

@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const config = require('./config/database');
-const taskCtrl = require('./controllers/tasks/tasks.controller');
+const diagnosticsCtrl = require('./controllers/diagnostics/diagnostics.controller');
 const authCtrl = require('./controllers/auth/auth.controller');
 const errorHandler = require('./_helpers/error-handler');
 const jwt = require('./_helpers/jwt');
@@ -26,7 +26,7 @@ app.get('/', (req, res) => {
 })
 
 //Routing all HTTP requests to /bucketlist to tasks controller
-app.use('/task', taskCtrl);
+app.use('/diagnostics', diagnosticsCtrl);
 
 //Routing all HTTP requests to /auth to auth controller
 app.use('/auth', authCtrl);

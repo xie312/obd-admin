@@ -15,7 +15,7 @@ th.mat-sort-header-sorted {
 .mat-cell:nth-child(1),
 .mat-header-cell:nth-child(1){
   /* flex: 0 0 20%; */
-  width: 50px;
+  width: 100px;
 }
 
 .mat-cell:nth-child(2),
