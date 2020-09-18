@@ -27,11 +27,11 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-  selector: 'app-customer-list',
-  templateUrl: './customer-list.component.html',
-  styleUrls: ['./customer-list.component.css']
+  selector: 'app-diagnostic-list',
+  templateUrl: './diagnostic-list.component.html',
+  styleUrls: ['./diagnostic-list.component.css']
 })
-export class CustomerListComponent implements OnInit {
+export class DiagnosticListComponent implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
@@ -44,8 +44,8 @@ export class CustomerListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Connected Workshop - Customers');
-    this.logger.log('Customers loaded');
+    this.titleService.setTitle('Connected Workshop - Diagnostics');
+    this.logger.log('Diagnostics loaded');
     this.dataSource.sort = this.sort;
 
   }

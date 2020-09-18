@@ -14,8 +14,8 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'customers',
-        loadChildren: './customers/customers.module#CustomersModule',
+        path: 'diagnostics',
+        loadChildren: './diagnostics/diagnostics.module#DiagnosticsModule',
         canActivate: [AuthGuard]
     },
     {
@@ -45,7 +45,7 @@ const appRoutes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'dashboard',
+        redirectTo: 'diagnostics',
         pathMatch: 'full'
     }
 ];
