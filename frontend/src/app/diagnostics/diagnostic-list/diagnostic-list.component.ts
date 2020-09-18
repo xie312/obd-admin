@@ -1,40 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NGXLogger } from 'ngx-logger';
 import { Title } from '@angular/platform-browser';
 import { NotificationService } from '../../core/services/notification.service';
-import { HttpDataService } from '../../core/services/diagnostics-data.service';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-  { position: 11, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 12, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 13, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 14, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 15, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 16, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 17, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 18, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 19, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 20, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+import { DiagnosticsDataService } from '../../core/services/diagnostics-data.service';
+import * as _ from 'lodash';
+import { NgForm } from '@angular/forms';
+import { Student } from '../../core/models/student';
 
 @Component({
   selector: 'app-diagnostic-list',
@@ -42,21 +16,101 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./diagnostic-list.component.css']
 })
 export class DiagnosticListComponent implements OnInit {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  @ViewChild('studentForm', { static: false })
+  studentForm: NgForm;
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  studentData: Student;
 
-  constructor(
-    private logger: NGXLogger,
-    private notificationService: NotificationService,
-    private titleService: Title
-  ) { }
+  dataSource = new MatTableDataSource();
+  displayedColumns: string[] = ['id', 'name', 'age', 'address'];
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true}) sort: MatSort;
 
-  ngOnInit() {
-    this.titleService.setTitle('Connected Workshop - Diagnostics');
-    this.logger.log('Diagnostics loaded');
+
+  isEditMode = false;
+
+  constructor(private diagnosticsDataService: DiagnosticsDataService) {
+    this.studentData = {} as Student;
+  }
+
+  ngOnInit(): void {
+
+    // Initializing Datatable pagination
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
+    // Fetch All Students on Page load
+    this.getAllStudents()
+  }
+
+  getAllStudents() {
+    this.diagnosticsDataService.getList().subscribe((response: any) => {
+      this.dataSource.data = response;
+    });
+  }
+
+  editItem(element) {
+    this.studentData = _.cloneDeep(element);
+    this.isEditMode = true;
+  }
+
+  cancelEdit() {
+    this.isEditMode = false;
+    this.studentForm.resetForm();
+  }
+
+  deleteItem(id) {
+    this.diagnosticsDataService.deleteItem(id).subscribe((response: any) => {
+
+      // Approach #1 to update datatable data on local itself without fetching new data from server
+      this.dataSource.data = this.dataSource.data.filter((o: Student) => {
+        return o.id !== id ? o : false;
+      })
+
+      console.log(this.dataSource.data);
+
+      // Approach #2 to re-call getAllStudents() to fetch updated data
+      // this.getAllStudents()
+    });
+  }
+
+  addStudent() {
+    this.diagnosticsDataService.createItem(this.studentData).subscribe((response: any) => {
+      this.dataSource.data.push({ ...response })
+      this.dataSource.data = this.dataSource.data.map(o => {
+        return o;
+      })
+    });
+  }
+
+  updateStudent() {
+    this.diagnosticsDataService.updateItem(this.studentData.id, this.studentData).subscribe((response: any) => {
+
+      // Approach #1 to update datatable data on local itself without fetching new data from server
+      this.dataSource.data = this.dataSource.data.map((o: Student) => {
+        if (o.id === response.id) {
+          o = response;
+        }
+        return o;
+      })
+
+      // Approach #2 to re-call getAllStudents() to fetch updated data
+      // this.getAllStudents()
+
+      this.cancelEdit()
+
+    });
+  }
+
+
+  onSubmit() {
+    if (this.studentForm.form.valid) {
+      if (this.isEditMode)
+        this.updateStudent()
+      else
+        this.addStudent();
+    } else {
+      console.log('Enter valid data!');
+    }
   }
 }

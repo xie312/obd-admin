@@ -124,13 +124,6 @@ p .mat-icon {
   background-color: rgba(14, 152, 5, 0.25);
 }
 
-.table-wrapper {
-  overflow: auto;
-  height: calc(100vh - 270px);
-  max-height: 450px;
-  /* padding: 10px 5px; */
-}
-
 .animate {
   animation-name: show;
   animation-duration: 1s;
